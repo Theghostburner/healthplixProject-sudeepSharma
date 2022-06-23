@@ -76,20 +76,22 @@ func getMedicines(c *gin.Context) {
     if err != nil {
         panic(err.Error()) // proper error handling instead of panic in your app
     }
+	medicines_to_return := []medicine{}
 	for results.Next() {
-        var tag Tag
+
+        var medicine_dash medicine
         // for each row, scan the result into our tag composite object
-        err = results.Scan(&tag.ID, &tag.Name)
+        err = results.Scan(&medicine_dash.created_on,&medicine_dash.updated_on,&medicine_dash.updated_by,&medicine_dash.created_by,&medicine_dash.medicine_name,&medicine_dash.manufacturer,&medicine_dash.medicine_price,&medicine_dash.medicine_id)
         if err != nil {
             panic(err.Error()) // proper error handling instead of panic in your app
         }
                 // and then print out the tag's Name attribute
-        log.Printf(tag.Name)
+		medicines_to_return = append(medicines_to_return, medicine_dash)
+        c.IndentedJSON(http.StatusOK, medicines_to_return)
     }
 
 }
 
-}
 func getAlbumByID(c *gin.Context) {
 	id := c.Param("id")
 
